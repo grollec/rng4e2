@@ -5,6 +5,7 @@ export type RawArticle = {
   content: HTMLData;
   excerpt: HTMLData;
   title: HTMLData;
+  fimg_url?: string;
 };
 
 export type Article = {
@@ -12,4 +13,5 @@ export type Article = {
   content: string;
   excerpt: string;
   title: string;
+  img?: string;
 };
