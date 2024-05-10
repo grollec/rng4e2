@@ -6,12 +6,12 @@ import {isRawArticle, parseRawArticle} from '../../../parsers/article';
 import {Article} from '../../../types/Article';
 import {COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
-import {useLinkTo} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {NEWS_ROUTES} from '../../../constants/routes';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
-const NEWS_QUERY_KEY = 'news';
+export const NEWS_QUERY_KEY = 'news';
 
 function parseNewsResponse(data: unknown): Article[] {
   if (isArray(data)) {
@@ -65,12 +65,14 @@ export const NewsList = () => {
     return data?.pages.flat() || [];
   }, [data?.pages]);
 
-  const linkTo = useLinkTo();
+  const navigation = useNavigation();
   const onItemPress = useCallback(
     (id: number) => {
-      linkTo(`/${NEWS_ROUTES.details}/${id}`);
+      navigation.navigate(NEWS_ROUTES.details, {
+        articleId: id,
+      });
     },
-    [linkTo],
+    [navigation],
   );
 
   return (
