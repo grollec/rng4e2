@@ -2,7 +2,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 
-import {News} from './src/Screens/News';
+import {News} from './src/Screens/News/News';
 import {Articles} from './src/Screens/Articles';
 
 import NetInfo from '@react-native-community/netinfo';
@@ -13,6 +13,7 @@ import {
   onlineManager,
 } from '@tanstack/react-query';
 import {AppState, AppStateStatus, Platform} from 'react-native';
+import {MAIN_ROUTES} from './src/constants/routes';
 
 onlineManager.setEventListener(setOnline => {
   return NetInfo.addEventListener(state => {
@@ -42,8 +43,16 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="Article" component={News} />
-          <Tab.Screen name="Articles" component={Articles} />
+          <Tab.Screen
+            name={MAIN_ROUTES.news}
+            component={News}
+            options={{headerShown: false}}
+          />
+          <Tab.Screen
+            name={MAIN_ROUTES.articles}
+            component={Articles}
+            options={{headerShown: false}}
+          />
         </Tab.Navigator>
       </NavigationContainer>
     </QueryClientProvider>
