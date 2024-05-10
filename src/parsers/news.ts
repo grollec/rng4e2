@@ -1,5 +1,5 @@
 import {has, isObject} from 'lodash';
-import {News, RawNews} from '../types/News';
+import {Article, RawArticle} from '../types/Article';
 
 function hasValidId(maybeNews: object) {
   return has(maybeNews, 'id') && typeof maybeNews.id === 'number';
@@ -21,7 +21,7 @@ function hasValidTitle(maybeNews: object) {
   return has(maybeNews, 'title') && isHTMLData(maybeNews.title);
 }
 
-export function isRawNews(maybeNews: unknown): maybeNews is RawNews {
+export function isRawNews(maybeNews: unknown): maybeNews is RawArticle {
   if (isObject(maybeNews)) {
     if (
       hasValidId(maybeNews) &&
@@ -35,7 +35,7 @@ export function isRawNews(maybeNews: unknown): maybeNews is RawNews {
   return false;
 }
 
-export function parseRawNews(rawNews: RawNews): News {
+export function parseRawNews(rawNews: RawArticle): Article {
   const {id, content, excerpt, title} = rawNews;
   return {
     id,

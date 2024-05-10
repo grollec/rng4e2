@@ -42,7 +42,7 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
         <Tab.Navigator>
-          <Tab.Screen name="News" component={News} />
+          <Tab.Screen name="Article" component={News} />
           <Tab.Screen name="Articles" component={Articles} />
         </Tab.Navigator>
       </NavigationContainer>

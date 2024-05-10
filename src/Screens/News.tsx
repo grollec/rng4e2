@@ -1,16 +1,23 @@
 import {useQuery} from '@tanstack/react-query';
 import {isArray} from 'lodash';
-import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  VirtualizedList,
+  VirtualizedListProps,
+} from 'react-native';
 import {isRawNews, parseRawNews} from '../parsers/news';
-import {News as NewsType} from '../types/News';
+import {Article} from '../types/Article';
 
 const PER_PAGE = 20;
 const PAGE = 1;
 const OFFSET = 0;
 const NEWS_QUERY_KEY = 'news';
 
-function parseNewsResponse(data: unknown): NewsType[] {
+function parseNewsResponse(data: unknown): Article[] {
   if (isArray(data)) {
     return data.filter(isRawNews).map(parseRawNews);
   }
@@ -26,18 +33,43 @@ async function fetchNews() {
   return parseNewsResponse(rawNews);
 }
 
+const Item = ({article}: {article: Article}) => {
+  const {id, title, excerpt} = article;
+  return (
+    <View key={id}>
+      <Text>{title}</Text>
+      <Text>{excerpt}</Text>
+    </View>
+  );
+};
+
+function getItem(data: Article[], index: number) {
+  return data[index];
+}
+
+function getItemCount(data: Article[]) {
+  return data.length;
+}
+
 export const News = () => {
   const {data, isLoading, isError} = useQuery({
     queryKey: [NEWS_QUERY_KEY],
     queryFn: fetchNews,
+    placeholderData: [],
   });
 
   console.log(data);
 
   return (
-    <View style={styles.container}>
-      <Text>News</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <VirtualizedList<Article>
+        initialNumToRender={PER_PAGE}
+        renderItem={item => <Item article={item.item} />}
+        data={data}
+        getItem={getItem}
+        getItemCount={getItemCount}
+      />
+    </SafeAreaView>
   );
 };
 
