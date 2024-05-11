@@ -1,6 +1,7 @@
 export const MAIN_ROUTES = {
   news: 'news' as const,
   articles: 'articles' as const,
+  settings: 'settings' as const,
 };
 
 export const NEWS_ROUTES = {
