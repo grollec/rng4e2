@@ -8,19 +8,20 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import {useTheme} from 'react-native-paper';
 import {convert} from 'html-to-text';
-import {COLOR_MARINE, COLOR_WHITE} from '../../../constants/colors';
 
-type Props = {article: Article; isOdd: boolean; onPress: (id: number) => void};
-export const Item = ({article, isOdd, onPress}: Props) => {
+type Props = {article: Article; onPress: (id: number) => void};
+export const Item = ({article, onPress}: Props) => {
   const {id, title, excerpt, img} = article;
   const {width} = useWindowDimensions();
   const textTitle = convert(title);
   const textExcerpt = convert(excerpt);
   const textStyles = getTextPartStyles(width);
+  const styles = useStyles();
   return (
     <Pressable onPress={() => onPress(id)}>
-      <View key={id} style={isOdd ? lightItem : darkItem}>
+      <View key={id} style={styles.item}>
         <View>
           <Image
             source={{uri: img}}
@@ -29,10 +30,10 @@ export const Item = ({article, isOdd, onPress}: Props) => {
           />
         </View>
         <View style={textStyles}>
-          <Text style={isOdd ? lightTitle : darkTitle} numberOfLines={2}>
+          <Text style={styles.title} numberOfLines={2}>
             {textTitle}
           </Text>
-          <Text style={isOdd ? lightText : darkText} numberOfLines={4}>
+          <Text style={styles.text} numberOfLines={4}>
             {textExcerpt}
           </Text>
         </View>
@@ -41,39 +42,38 @@ export const Item = ({article, isOdd, onPress}: Props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    height: 136,
-    padding: 8,
-  },
-  darkBackground: {
-    backgroundColor: COLOR_MARINE,
-  },
-  darkTextColor: {
-    color: COLOR_WHITE,
-  },
-  lightBackground: {
-    backgroundColor: COLOR_WHITE,
-  },
-  lightTextColor: {
-    color: COLOR_MARINE,
-  },
-  itemText: {
-    fontWeight: 'regular',
-  },
-  itemTitle: {
-    fontWeight: 'bold',
-  },
-});
+function useStyles() {
+  const theme = useTheme();
+  const styles = StyleSheet.create({
+    item: {
+      flexDirection: 'row',
+      height: 136,
+      padding: 8,
+    },
+    background: {
+      backgroundColor: theme.colors.background,
+    },
+    textColor: {
+      color: theme.colors.onPrimaryContainer,
+    },
+    itemText: {
+      fontWeight: 'regular',
+    },
+    itemTitle: {
+      fontWeight: 'bold',
+    },
+  });
 
-const lightItem = StyleSheet.compose(styles.item, styles.lightBackground);
-const lightText = StyleSheet.compose(styles.itemText, styles.lightTextColor);
-const lightTitle = StyleSheet.compose(styles.itemTitle, styles.lightTextColor);
+  const item = StyleSheet.compose(styles.item, styles.background);
+  const text = StyleSheet.compose(styles.itemText, styles.textColor);
+  const title = StyleSheet.compose(styles.itemTitle, styles.textColor);
 
-const darkItem = StyleSheet.compose(styles.item, styles.darkBackground);
-const darkText = StyleSheet.compose(styles.itemText, styles.darkTextColor);
-const darkTitle = StyleSheet.compose(styles.itemTitle, styles.darkTextColor);
+  return {
+    item,
+    text,
+    title,
+  };
+}
 
 function getTextPartStyles(width: number) {
   return StyleSheet.compose(

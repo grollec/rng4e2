@@ -1,7 +1,5 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import React, {useMemo} from 'react';
-import {NewsRoutesParamsList} from '../../../constants/routes';
-import {InfiniteData, useQuery} from '@tanstack/react-query';
+import {InfiniteData, keepPreviousData, useQuery} from '@tanstack/react-query';
 import {Article} from '../../../types/Article';
 import {NEWS_QUERY_KEY} from '../../../services/api';
 import {
@@ -14,16 +12,13 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import RenderHTML from 'react-native-render-html';
+import {NewsNativeStackScreenProps} from '../News';
 
-type Props = NativeStackScreenProps<
-  NewsRoutesParamsList,
-  'news-details',
-  'news-stack-navigator'
->;
-export const NewsDetails = ({route}: Props) => {
+export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
   const articleId = route.params.articleId;
   const {data} = useQuery<InfiniteData<Article[]>>({
     queryKey: [NEWS_QUERY_KEY],
+    placeholderData: keepPreviousData,
   });
 
   const article = useMemo(

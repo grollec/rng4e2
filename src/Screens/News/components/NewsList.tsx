@@ -8,10 +8,10 @@ import {COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
 import {NEWS_ROUTES} from '../../../constants/routes';
+import {NEWS_QUERY_KEY} from '../../../services/api';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
-export const NEWS_QUERY_KEY = 'news';
 
 function parseNewsResponse(data: unknown): Article[] {
   if (isArray(data)) {
@@ -79,13 +79,7 @@ export const NewsList = () => {
     <SafeAreaView style={styles.container}>
       <VirtualizedList<Article>
         initialNumToRender={PER_PAGE}
-        renderItem={item => (
-          <Item
-            onPress={onItemPress}
-            article={item.item}
-            isOdd={item.index % 2 === 0}
-          />
-        )}
+        renderItem={item => <Item onPress={onItemPress} article={item.item} />}
         data={news}
         getItem={getItem}
         getItemCount={getItemCount}

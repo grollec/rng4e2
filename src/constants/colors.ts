@@ -76,7 +76,7 @@ const DARK_THEME_COLORS = {
   onError: 'rgb(105, 0, 5)',
   errorContainer: 'rgb(147, 0, 10)',
   onErrorContainer: 'rgb(255, 180, 171)',
-  background: 'rgb(27, 27, 31)',
+  background: '#101F45',
   onBackground: 'rgb(228, 226, 230)',
   surface: 'rgb(27, 27, 31)',
   onSurface: 'rgb(228, 226, 230)',
