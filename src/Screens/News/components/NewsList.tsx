@@ -7,6 +7,7 @@ import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
 import {NEWS_ROUTES} from '../../../constants/routes';
 import {NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
+import {MainItem} from './MainItem';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
@@ -59,7 +60,13 @@ export const NewsList = () => {
     <SafeAreaView style={styles.container}>
       <VirtualizedList<Article>
         initialNumToRender={PER_PAGE}
-        renderItem={item => <Item onPress={onItemPress} article={item.item} />}
+        renderItem={item =>
+          item.index === 0 ? (
+            <MainItem article={item.item} onPress={onItemPress} />
+          ) : (
+            <Item onPress={onItemPress} article={item.item} />
+          )
+        }
         keyExtractor={item => item.id.toString()}
         data={news}
         getItem={getItem}

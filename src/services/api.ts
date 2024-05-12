@@ -19,5 +19,6 @@ export async function fetchNews({pageParam}: {pageParam: number}) {
   }&_fields=${ARTICLE_FIELDS}&_embed`;
   const res = await fetch(url, {});
   const rawNews = await res.json();
+  console.log(rawNews);
   return parseNewsResponse(rawNews);
 }

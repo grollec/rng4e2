@@ -13,7 +13,7 @@ export type RawArticle = {
     'wp:featuredmedia'?: {
       source_url?: string;
     }[];
-    authors?: {
+    author?: {
       name?: string;
     }[];
     'wp:term'?: {

@@ -53,7 +53,7 @@ export function parseRawArticle(rawNews: RawArticle): Article {
     excerpt: excerpt?.rendered,
     title: title?.rendered,
     img: _embedded?.['wp:featuredmedia']?.find(fm => fm.source_url)?.source_url,
-    author: _embedded?.authors?.find(a => a.name)?.name,
+    author: _embedded?.author?.find(a => a.name)?.name || 'G4E',
     categories: _embedded?.['wp:term']
       ?.map(t => t.map(tt => tt.name))
       .flat()
