@@ -11,7 +11,19 @@ export type RawArticle = {
   type?: string;
   _embedded?: {
     'wp:featuredmedia'?: {
-      source_url?: string;
+      media_details?: {
+        sizes?: {
+          thumbnail?: {
+            source_url?: string;
+          };
+          medium?: {
+            source_url?: string;
+          };
+          medium_large?: {
+            source_url?: string;
+          };
+        };
+      };
     }[];
     author?: {
       name?: string;
@@ -28,6 +40,7 @@ export type Article = {
   excerpt: string;
   title: string;
   img?: string;
+  thumbnail?: string;
   author?: string;
   categories?: string[];
   link?: string;

@@ -10,7 +10,7 @@ const ITEM_PADDING = 16;
 
 type Props = {article: Article; onPress: (id: number) => void};
 export const Item = memo(({article, onPress}: Props) => {
-  const {id, title, img, date, categories} = article;
+  const {id, title, thumbnail, date, categories} = article;
   const textTitle = convert(title);
   const styles = useStyles();
   return (
@@ -28,10 +28,10 @@ export const Item = memo(({article, onPress}: Props) => {
             </Text>
           </View>
           <View style={styles.all.imageContainer}>
-            {img ? (
+            {thumbnail ? (
               <Image
                 loadingIndicatorSource={fallback_pic}
-                source={{uri: img}}
+                source={{uri: thumbnail}}
                 style={styles.all.image}
               />
             ) : (

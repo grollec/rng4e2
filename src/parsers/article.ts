@@ -52,7 +52,11 @@ export function parseRawArticle(rawNews: RawArticle): Article {
     content: content?.rendered,
     excerpt: excerpt?.rendered,
     title: title?.rendered,
-    img: _embedded?.['wp:featuredmedia']?.find(fm => fm.source_url)?.source_url,
+    img: _embedded?.['wp:featuredmedia']?.[0].media_details?.sizes?.medium_large
+      ?.source_url,
+    thumbnail:
+      _embedded?.['wp:featuredmedia']?.[0].media_details?.sizes?.medium
+        ?.source_url,
     author: _embedded?.author?.find(a => a.name)?.name || 'G4E',
     categories: _embedded?.['wp:term']
       ?.map(t => t.map(tt => tt.name))

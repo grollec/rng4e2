@@ -32,8 +32,8 @@ export const MainItem = ({article, onPress}: Props) => {
           style={styles.gradient}>
           <View style={styles.container}>
             <Text style={styles.title}>{textTitle}</Text>
-            <Text style={styles.author}>
-              Par {author} le {date.format('ddd DD MMM YYYY - HH:mm')}
+            <Text style={styles.author} numberOfLines={1}>
+              Par {author} - {date.format('ddd DD MMM YYYY - HH:mm')}
             </Text>
           </View>
         </LinearGradient>

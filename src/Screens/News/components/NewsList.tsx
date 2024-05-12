@@ -1,6 +1,12 @@
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query';
-import React, {useCallback, useMemo, useState} from 'react';
-import {Button, SafeAreaView, StyleSheet, VirtualizedList} from 'react-native';
+import React, {useCallback, useMemo} from 'react';
+import {
+  ListRenderItemInfo,
+  SafeAreaView,
+  StyleSheet,
+  VirtualizedList,
+} from 'react-native';
+import {Button} from 'react-native-paper';
 import {Article} from '../../../types/Article';
 import {COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
@@ -17,18 +23,17 @@ function getItem(data: Article[], index: number) {
 }
 
 function getItemCount(data?: Article[]) {
-  return data?.length || 0;
+  return (data?.length || 0) + 1;
 }
 
 export const NewsList = () => {
-  const [showLoadMore, setShowLoadMore] = useState(false);
   const {
     data,
     refetch,
     isRefetching,
-    isPlaceholderData,
     fetchNextPage,
     isFetchingNextPage,
+    isPlaceholderData,
   } = useInfiniteQuery({
     queryKey: [NEWS_QUERY_KEY],
     queryFn: fetchNews,
@@ -56,32 +61,44 @@ export const NewsList = () => {
     [navigation],
   );
 
+  const handleFetchNextPage = useCallback(() => {
+    if (!isPlaceholderData && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, isFetchingNextPage, isPlaceholderData]);
+
+  const renderItem = useCallback(
+    (item: ListRenderItemInfo<Article>) => {
+      if (item.item) {
+        if (item.index === 0) {
+          return <MainItem article={item.item} onPress={onItemPress} />;
+        }
+        return <Item onPress={onItemPress} article={item.item} />;
+      }
+      return (
+        <Button
+          disabled={isFetchingNextPage}
+          loading={isFetchingNextPage}
+          onPress={handleFetchNextPage}>
+          Charger plus de brèves
+        </Button>
+      );
+    },
+    [handleFetchNextPage, isFetchingNextPage, onItemPress],
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <VirtualizedList<Article>
         initialNumToRender={PER_PAGE}
-        renderItem={item =>
-          item.index === 0 ? (
-            <MainItem article={item.item} onPress={onItemPress} />
-          ) : (
-            <Item onPress={onItemPress} article={item.item} />
-          )
-        }
-        keyExtractor={item => item.id.toString()}
+        renderItem={renderItem}
+        keyExtractor={item => item?.id?.toString() || 'load-more-button'}
         data={news}
         getItem={getItem}
         getItemCount={getItemCount}
         onRefresh={refetch}
         refreshing={isRefetching}
-        onEndReached={() => setShowLoadMore(true)}
       />
-      {showLoadMore && !isPlaceholderData ? (
-        <Button
-          disabled={isFetchingNextPage}
-          onPress={() => fetchNextPage()}
-          title="Load more"
-        />
-      ) : null}
     </SafeAreaView>
   );
 };
