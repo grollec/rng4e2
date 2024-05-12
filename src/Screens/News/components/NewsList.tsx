@@ -1,35 +1,15 @@
 import {keepPreviousData, useInfiniteQuery} from '@tanstack/react-query';
-import {isArray} from 'lodash';
 import React, {useCallback, useMemo, useState} from 'react';
 import {Button, SafeAreaView, StyleSheet, VirtualizedList} from 'react-native';
-import {isRawArticle, parseRawArticle} from '../../../parsers/article';
 import {Article} from '../../../types/Article';
 import {COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
 import {NEWS_ROUTES} from '../../../constants/routes';
-import {NEWS_QUERY_KEY} from '../../../services/api';
+import {NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
-
-function parseNewsResponse(data: unknown): Article[] {
-  if (isArray(data)) {
-    return data.filter(isRawArticle).map(parseRawArticle);
-  }
-  return [];
-}
-
-async function fetchNews({pageParam}: {pageParam: number}) {
-  const res = await fetch(
-    `https://www.girondins4ever.com/wp-json/wp/v2/breves?per_page=${PER_PAGE}&offset=${
-      pageParam * PER_PAGE
-    }`,
-    {},
-  );
-  const rawNews = await res.json();
-  return parseNewsResponse(rawNews);
-}
 
 function getItem(data: Article[], index: number) {
   return data[index];
@@ -80,6 +60,7 @@ export const NewsList = () => {
       <VirtualizedList<Article>
         initialNumToRender={PER_PAGE}
         renderItem={item => <Item onPress={onItemPress} article={item.item} />}
+        keyExtractor={item => item.id.toString()}
         data={news}
         getItem={getItem}
         getItemCount={getItemCount}

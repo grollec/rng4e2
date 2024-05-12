@@ -1,59 +1,79 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {Article} from '../../../types/Article';
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  useWindowDimensions,
-} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {useTheme} from 'react-native-paper';
 import {convert} from 'html-to-text';
 
+const fallback_pic = require('../../../assets/images/fallback_pic.jpg');
+
+const ITEM_PADDING = 16;
+
 type Props = {article: Article; onPress: (id: number) => void};
-export const Item = ({article, onPress}: Props) => {
-  const {id, title, excerpt, img} = article;
-  const {width} = useWindowDimensions();
+export const Item = memo(({article, onPress}: Props) => {
+  const {id, title, img, date, categories} = article;
   const textTitle = convert(title);
-  const textExcerpt = convert(excerpt);
-  const textStyles = getTextPartStyles(width);
   const styles = useStyles();
   return (
     <Pressable onPress={() => onPress(id)}>
       <View key={id} style={styles.item}>
         <View>
-          <Image
-            source={{uri: img}}
-            width={width * (1 / 3) - 16}
-            height={120}
-          />
-        </View>
-        <View style={textStyles}>
-          <Text style={styles.title} numberOfLines={2}>
-            {textTitle}
-          </Text>
-          <Text style={styles.text} numberOfLines={4}>
-            {textExcerpt}
+          <Text style={styles.all.date}>
+            Publié le {date.format('ddd DD MMM YYYY - HH:mm')}
           </Text>
         </View>
+        <View style={styles.all.middle}>
+          <View style={styles.all.textPart}>
+            <Text style={styles.title} numberOfLines={4}>
+              {textTitle}
+            </Text>
+          </View>
+          <View style={styles.all.imageContainer}>
+            {img ? (
+              <Image
+                loadingIndicatorSource={fallback_pic}
+                source={{uri: img}}
+                style={styles.all.image}
+              />
+            ) : (
+              <Image
+                source={fallback_pic}
+                resizeMode="contain"
+                style={styles.all.image}
+              />
+            )}
+          </View>
+        </View>
+        <Text>{categories?.join(' - ')}</Text>
       </View>
     </Pressable>
   );
-};
+});
 
 function useStyles() {
   const theme = useTheme();
   const styles = StyleSheet.create({
     item: {
+      padding: ITEM_PADDING,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.outlineVariant,
+      flex: 1,
+      justifyContent: 'space-between',
+      backgroundColor: 'red',
+    },
+    middle: {
       flexDirection: 'row',
-      height: 136,
-      padding: 8,
+      justifyContent: 'space-between',
     },
     background: {
       backgroundColor: theme.colors.background,
     },
+    textPart: {
+      width: '60%',
+    },
     textColor: {
+      color: theme.colors.onTertiaryContainer,
+    },
+    titleColor: {
       color: theme.colors.onPrimaryContainer,
     },
     itemText: {
@@ -62,25 +82,30 @@ function useStyles() {
     itemTitle: {
       fontWeight: 'bold',
     },
+    date: {
+      fontWeight: 'thin',
+    },
+    imageContainer: {
+      width: '40%',
+      height: 100,
+      flex: 1,
+      alignItems: 'flex-end',
+    },
+    image: {
+      maxWidth: '90%',
+      height: 100,
+      aspectRatio: 16 / 9,
+    },
   });
 
   const item = StyleSheet.compose(styles.item, styles.background);
   const text = StyleSheet.compose(styles.itemText, styles.textColor);
-  const title = StyleSheet.compose(styles.itemTitle, styles.textColor);
+  const title = StyleSheet.compose(styles.itemTitle, styles.titleColor);
 
   return {
     item,
     text,
     title,
+    all: styles,
   };
-}
-
-function getTextPartStyles(width: number) {
-  return StyleSheet.compose(
-    {
-      paddingLeft: 8,
-      justifyContent: 'space-between',
-    },
-    {width: width * (2 / 3)},
-  );
 }

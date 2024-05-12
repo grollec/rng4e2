@@ -12,6 +12,10 @@ import {
 import {AppState, AppStateStatus, Platform, useColorScheme} from 'react-native';
 import {DARK_THEME, LIGHT_THEME} from './src/constants/colors';
 import {TabNavigator} from './src/navigators/TabNavigator';
+import 'dayjs/locale/fr';
+import dayjs from 'dayjs';
+
+dayjs.locale('fr');
 
 onlineManager.setEventListener(setOnline => {
   return NetInfo.addEventListener(state => {

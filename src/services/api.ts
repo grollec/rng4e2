@@ -4,6 +4,7 @@ import {isRawArticle, parseRawArticle} from '../parsers/article';
 
 const PER_PAGE = 20;
 export const NEWS_QUERY_KEY = 'news';
+const ARTICLE_FIELDS = 'id,date,link,title,content,excerpt,type,_links';
 
 function parseNewsResponse(data: unknown): Article[] {
   if (isArray(data)) {
@@ -13,12 +14,10 @@ function parseNewsResponse(data: unknown): Article[] {
 }
 
 export async function fetchNews({pageParam}: {pageParam: number}) {
-  const res = await fetch(
-    `https://www.girondins4ever.com/wp-json/wp/v2/breves?per_page=${PER_PAGE}&offset=${
-      pageParam * PER_PAGE
-    }`,
-    {},
-  );
+  const url = `https://www.girondins4ever.com/wp-json/wp/v2/breves?per_page=${PER_PAGE}&offset=${
+    pageParam * PER_PAGE
+  }&_fields=${ARTICLE_FIELDS}&_embed`;
+  const res = await fetch(url, {});
   const rawNews = await res.json();
   return parseNewsResponse(rawNews);
 }

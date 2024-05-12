@@ -1,4 +1,5 @@
 import {has, isObject} from 'lodash';
+import dayjs from 'dayjs';
 import {Article, RawArticle} from '../types/Article';
 
 function hasValidId(maybeArticle: object) {
@@ -20,6 +21,9 @@ function hasValidExcerpt(maybeArticle: object) {
 function hasValidTitle(maybeArticle: object) {
   return has(maybeArticle, 'title') && isHTMLData(maybeArticle.title);
 }
+function hasValidDate(maybeArticle: object) {
+  return has(maybeArticle, 'date') && dayjs(maybeArticle.date).isValid();
+}
 
 export function isRawArticle(
   maybeArticle: unknown,
@@ -29,7 +33,8 @@ export function isRawArticle(
       hasValidId(maybeArticle) &&
       hasValidContent(maybeArticle) &&
       hasValidExcerpt(maybeArticle) &&
-      hasValidTitle(maybeArticle)
+      hasValidTitle(maybeArticle) &&
+      hasValidDate(maybeArticle)
     ) {
       return true;
     }
@@ -38,12 +43,20 @@ export function isRawArticle(
 }
 
 export function parseRawArticle(rawNews: RawArticle): Article {
-  const {id, content, excerpt, title, fimg_url} = rawNews;
+  const {id, content, excerpt, title, link, date, _embedded, type} = rawNews;
   return {
     id,
-    content: content.rendered,
-    excerpt: excerpt.rendered,
-    title: title.rendered,
-    img: fimg_url,
+    link,
+    date: dayjs(date),
+    type,
+    content: content?.rendered,
+    excerpt: excerpt?.rendered,
+    title: title?.rendered,
+    img: _embedded?.['wp:featuredmedia']?.find(fm => fm.source_url)?.source_url,
+    author: _embedded?.authors?.find(a => a.name)?.name,
+    categories: _embedded?.['wp:term']
+      ?.map(t => t.map(tt => tt.name))
+      .flat()
+      .filter((cat): cat is string => cat !== undefined),
   };
 }
