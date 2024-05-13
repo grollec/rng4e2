@@ -2,7 +2,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
 import {MAIN_ROUTES, NEWS_ROUTES, RoutesParamsList} from '../constants/routes';
 import {NewsDetails} from '../Screens/News/components/NewsDetails';
-import {COLOR_MARINE, COLOR_WHITE} from '../constants/colors';
+import {COLOR_MARINE} from '../constants/colors';
 import {TabNavigator} from './TabNavigator';
 
 const Stack = createNativeStackNavigator<RoutesParamsList>();
@@ -10,7 +10,13 @@ const Stack = createNativeStackNavigator<RoutesParamsList>();
 export const MainNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name={MAIN_ROUTES.news} component={TabNavigator} />
+      <Stack.Screen
+        name={MAIN_ROUTES.news}
+        component={TabNavigator}
+        options={{
+          statusBarColor: COLOR_MARINE,
+        }}
+      />
       <Stack.Screen
         name={NEWS_ROUTES.details}
         component={NewsDetails}

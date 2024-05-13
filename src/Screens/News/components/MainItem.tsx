@@ -20,12 +20,10 @@ export const MainItem = ({article, onPress}: Props) => {
   const {id, img, title, date, author} = article;
   const styles = useStyles();
   const textTitle = convert(title);
+  const imgSource = img ? {uri: img} : fallback_pic;
   return (
     <Pressable onPress={() => onPress(id)}>
-      <ImageBackground
-        source={{uri: img}}
-        defaultSource={fallback_pic}
-        style={styles.imageBackground}>
+      <ImageBackground source={imgSource} style={styles.imageBackground}>
         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 0, y: 1}}
