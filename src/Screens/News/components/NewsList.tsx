@@ -15,6 +15,7 @@ import {NEWS_ROUTES} from '../../../constants/routes';
 import {NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
 import {MainItem} from './MainItem';
 import {FetchError} from '../../FetchError';
+import {ListLoader} from '../../../components/ListLoader';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
@@ -101,16 +102,20 @@ export const NewsList = () => {
   return (
     <SafeAreaView style={styles.container}>
       {shouldShowError ? <FetchError onRefetch={refetch} /> : null}
-      <VirtualizedList<Article>
-        initialNumToRender={PER_PAGE}
-        renderItem={renderItem}
-        keyExtractor={item => item?.id?.toString() || 'load-more-button'}
-        data={news}
-        getItem={getItem}
-        getItemCount={getItemCount}
-        onRefresh={refetch}
-        refreshing={isRefetching}
-      />
+      {isLoading ? (
+        <ListLoader />
+      ) : (
+        <VirtualizedList<Article>
+          initialNumToRender={PER_PAGE}
+          renderItem={renderItem}
+          keyExtractor={item => item?.id?.toString() || 'load-more-button'}
+          data={news}
+          getItem={getItem}
+          getItemCount={getItemCount}
+          onRefresh={refetch}
+          refreshing={isRefetching}
+        />
+      )}
     </SafeAreaView>
   );
 };

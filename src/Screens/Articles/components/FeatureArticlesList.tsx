@@ -19,6 +19,7 @@ import {
 import {MainItem} from './MainItem';
 import {FetchError} from '../../FetchError';
 import {FocusAwareStatusBar} from '../../../components/FocusAwareStatusBar';
+import {ListLoader} from '../../../components/ListLoader';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
@@ -105,16 +106,21 @@ export const FeatureArticlesList = () => {
     <SafeAreaView style={styles.container}>
       <FocusAwareStatusBar backgroundColor={COLOR_BORDEAUX} />
       {shouldShowError ? <FetchError onRefetch={refetch} /> : null}
-      <VirtualizedList<Article>
-        initialNumToRender={PER_PAGE}
-        renderItem={renderItem}
-        keyExtractor={item => item?.id?.toString() || 'load-more-button'}
-        data={news}
-        getItem={getItem}
-        getItemCount={getItemCount}
-        onRefresh={refetch}
-        refreshing={isRefetching}
-      />
+      {isLoading ? (
+        <ListLoader />
+      ) : (
+        <VirtualizedList<Article>
+          initialNumToRender={PER_PAGE}
+          renderItem={renderItem}
+          keyExtractor={item => item?.id?.toString() || 'load-more-button'}
+          data={news}
+          getItem={getItem}
+          getItemCount={getItemCount}
+          onRefresh={refetch}
+          refreshing={isRefetching}
+          ListEmptyComponent={isLoading ? ListLoader : null}
+        />
+      )}
     </SafeAreaView>
   );
 };
