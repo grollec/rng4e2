@@ -116,7 +116,7 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
           </View>
         </View>
       </ScrollView>
-      <ArticleBottomBar />
+      <ArticleBottomBar article={article} />
     </SafeAreaView>
   );
 };

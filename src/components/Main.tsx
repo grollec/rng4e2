@@ -7,6 +7,7 @@ import {DARK_THEME, LIGHT_THEME} from '../constants/colors';
 import 'dayjs/locale/fr';
 import {MainNavigator} from '../navigators/MainNavigator';
 import {useSettingsQuery} from '../hooks/useSettings';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 function Main(): React.JSX.Element {
   const {data: settings} = useSettingsQuery();
@@ -22,11 +23,13 @@ function Main(): React.JSX.Element {
   }, [colorScheme, settings]);
 
   return (
-    <PaperProvider theme={isDarkTheme ? DARK_THEME : LIGHT_THEME}>
-      <NavigationContainer>
-        <MainNavigator />
-      </NavigationContainer>
-    </PaperProvider>
+    <SafeAreaProvider>
+      <PaperProvider theme={isDarkTheme ? DARK_THEME : LIGHT_THEME}>
+        <NavigationContainer>
+          <MainNavigator />
+        </NavigationContainer>
+      </PaperProvider>
+    </SafeAreaProvider>
   );
 }
 

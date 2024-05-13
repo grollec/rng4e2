@@ -4,6 +4,7 @@ import {IconButton, useTheme} from 'react-native-paper';
 import {Article} from '../types/Article';
 import {useNavigation} from '@react-navigation/native';
 import {convert} from 'html-to-text';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export const BOTTOM_BAR_HEIGHT = 50;
 
@@ -11,8 +12,9 @@ type Props = {
   article?: Article;
 };
 export const ArticleBottomBar = ({article}: Props) => {
+  const insets = useSafeAreaInsets();
   const theme = useTheme();
-  const styles = useStyles();
+  const styles = useStyles(insets.bottom);
   const navigation = useNavigation();
 
   const handleShareArticle = useCallback(() => {
@@ -46,7 +48,7 @@ export const ArticleBottomBar = ({article}: Props) => {
   );
 };
 
-function useStyles() {
+function useStyles(safeAreaBottomInset: number) {
   const theme = useTheme();
   return StyleSheet.create({
     bottomBar: {
@@ -57,7 +59,8 @@ function useStyles() {
       backgroundColor: theme.colors.background,
       borderTopWidth: 0.5,
       borderTopColor: theme.colors.outlineVariant,
-      height: BOTTOM_BAR_HEIGHT,
+      height: BOTTOM_BAR_HEIGHT + safeAreaBottomInset,
+      paddingBottom: safeAreaBottomInset,
     },
     container: {
       flex: 1,
