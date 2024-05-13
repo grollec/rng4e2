@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React, {memo, useMemo} from 'react';
 import {Article} from '../../../types/Article';
 import {Image, Pressable, StyleSheet, View} from 'react-native';
 import {useTheme, Text, Divider} from 'react-native-paper';
@@ -13,6 +13,10 @@ export const Item = memo(({article, onPress}: Props) => {
   const {id, title, thumbnail, date, categories} = article;
   const textTitle = convert(title);
   const styles = useStyles();
+  const imgSource = useMemo(
+    () => (thumbnail ? {uri: thumbnail} : fallback_pic),
+    [thumbnail],
+  );
   return (
     <Pressable onPress={() => onPress(id)}>
       <View key={id} style={styles.item}>
@@ -28,19 +32,7 @@ export const Item = memo(({article, onPress}: Props) => {
             </Text>
           </View>
           <View style={styles.all.imageContainer}>
-            {thumbnail ? (
-              <Image
-                loadingIndicatorSource={fallback_pic}
-                source={{uri: thumbnail}}
-                style={styles.all.image}
-              />
-            ) : (
-              <Image
-                source={fallback_pic}
-                resizeMode="contain"
-                style={styles.all.image}
-              />
-            )}
+            <Image source={imgSource} style={styles.all.image} />
           </View>
         </View>
         <Text style={styles.all.categories} variant="labelSmall">

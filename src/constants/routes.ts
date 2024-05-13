@@ -16,4 +16,13 @@ export type AppRoutesParamsList = {
     articleId: number;
   };
   [MAIN_ROUTES.settings]: undefined;
+  [SETTINGS_ROUTES.list]: undefined;
+} & SettingsRoutesParamList;
+
+export const SETTINGS_ROUTES = {
+  list: `${MAIN_ROUTES.settings}-list` as const,
+};
+
+export type SettingsRoutesParamList = {
+  [SETTINGS_ROUTES.list]: undefined;
 };

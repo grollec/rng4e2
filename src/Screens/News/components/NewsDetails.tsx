@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {ImageBackground, Linking, PixelRatio} from 'react-native';
+import {Linking, PixelRatio} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {useHeaderHeight} from '@react-navigation/elements';
 import {InfiniteData, keepPreviousData, useQuery} from '@tanstack/react-query';
@@ -19,7 +19,6 @@ import {isNaN} from 'lodash';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppRoutesParamsList} from '../../../constants/routes';
 import {IconButton, useTheme} from 'react-native-paper';
-import {COLOR_MARINE} from '../../../constants/colors';
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes';
 
 const fallbackImg = require('../../../assets/images/fallback_pic.jpg');
@@ -74,7 +73,10 @@ export const NewsDetails = ({
   const styles = useStyles({contentHeight});
   const titleStyles = useTitleStyles();
   const css = useCSS();
-
+  const imgSource = useMemo(
+    () => (article?.img ? {uri: article.img} : fallbackImg),
+    [article?.img],
+  );
   if (!article) {
     return (
       <View style={styles.notFoundContainer}>
@@ -87,9 +89,13 @@ export const NewsDetails = ({
     <SafeAreaView style={styles.articleContainer}>
       <ScrollView style={styles.flexOne}>
         <View style={styles.contentContainer}>
-          <ImageBackground source={fallbackImg}>
-            <Image source={{uri: article.img}} width={width} height={200} />
-          </ImageBackground>
+          <Image
+            source={imgSource}
+            width={width}
+            height={200}
+            style={styles.img}
+            resizeMode="cover"
+          />
           <View style={styles.titleContainer}>
             <RenderHTML
               baseStyle={titleStyles}
@@ -155,7 +161,7 @@ function useCSS() {
     }
     figure,
     img {
-      max-width: 100%;
+      min-width: 100%;
       height: auto;
     }
     </style>
@@ -177,6 +183,7 @@ const BOTTOM_BAR_HEIGHT = 50;
 
 function useStyles({contentHeight}: {contentHeight: number}) {
   const headerHeight = useHeaderHeight();
+  const {height} = useWindowDimensions();
   const theme = useTheme();
   return StyleSheet.create({
     articleContainer: {
@@ -191,6 +198,9 @@ function useStyles({contentHeight}: {contentHeight: number}) {
       alignItems: 'center',
       paddingTop: headerHeight,
       paddingBottom: BOTTOM_BAR_HEIGHT,
+    },
+    img: {
+      height: height * 0.4,
     },
     divider: {
       margin: 16,

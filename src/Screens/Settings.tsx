@@ -6,18 +6,19 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {List, SegmentedButtons, Text} from 'react-native-paper';
+import {List, SegmentedButtons, Text, useTheme} from 'react-native-paper';
 import {Settings} from '../types/Settings';
 import {useSettingsMutation, useSettingsQuery} from '../hooks/useSettings';
 
 const TOSURL = 'https://www.girondins4ever.com/mentions-legales/';
 
 export const SettingsScreen = () => {
+  const styles = useStyles();
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.contentContainer}>
-          <Text variant="titleMedium">Paramètres</Text>
+          <Text variant="titleMedium">Interface</Text>
           <View>
             <Text style={styles.label} variant="labelMedium">
               Thème
@@ -47,7 +48,6 @@ const ThemeSwitch = () => {
   const {mutate} = useSettingsMutation();
   const handleChangeTheme = useCallback(
     (nextTheme?: Settings['activeTheme']) => {
-      console.log(nextTheme);
       if (nextTheme) {
         mutate({activeTheme: nextTheme});
       }
@@ -82,21 +82,25 @@ const ThemeSwitch = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  contentContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  section: {
-    marginTop: 16,
-  },
-  label: {
-    margin: 8,
-  },
-});
+function useStyles() {
+  const theme = useTheme();
+  return StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    scrollView: {
+      flex: 1,
+    },
+    contentContainer: {
+      flex: 1,
+      padding: 16,
+    },
+    section: {
+      marginTop: 16,
+    },
+    label: {
+      margin: 8,
+    },
+  });
+}
