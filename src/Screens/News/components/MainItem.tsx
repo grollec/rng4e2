@@ -1,6 +1,7 @@
 import React from 'react';
 import {Article} from '../../../types/Article';
-import {ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
+import {ImageBackground, Pressable, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import {
   COLOR_MARINE,
   COLOR_WHITE,
@@ -31,7 +32,12 @@ export const MainItem = ({article, onPress}: Props) => {
           colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.5)', 'rgba(0,0,0,1)']}
           style={styles.gradient}>
           <View style={styles.container}>
-            <Text style={styles.title}>{textTitle}</Text>
+            <Text
+              style={styles.title}
+              variant="headlineMedium"
+              numberOfLines={3}>
+              {textTitle}
+            </Text>
             <Text style={styles.author} numberOfLines={1}>
               Par {author} - {date.format('ddd DD MMM YYYY - HH:mm')}
             </Text>
@@ -57,7 +63,6 @@ function useStyles() {
     title: {
       color: COLOR_WHITE,
       fontWeight: 'bold',
-      fontSize: 20,
       marginBottom: 8,
     },
     author: {

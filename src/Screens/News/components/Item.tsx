@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import {Article} from '../../../types/Article';
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {Image, Pressable, StyleSheet, View} from 'react-native';
+import {useTheme, Text, Divider} from 'react-native-paper';
 import {convert} from 'html-to-text';
 
 const fallback_pic = require('../../../assets/images/fallback_pic.jpg');
@@ -17,13 +17,13 @@ export const Item = memo(({article, onPress}: Props) => {
     <Pressable onPress={() => onPress(id)}>
       <View key={id} style={styles.item}>
         <View>
-          <Text style={styles.all.date}>
+          <Text style={styles.all.date} variant="labelSmall">
             Publié le {date.format('ddd DD MMM YYYY - HH:mm')}
           </Text>
         </View>
         <View style={styles.all.middle}>
           <View style={styles.all.textPart}>
-            <Text style={styles.title} numberOfLines={4}>
+            <Text style={styles.title} variant="titleMedium" numberOfLines={4}>
               {textTitle}
             </Text>
           </View>
@@ -43,7 +43,10 @@ export const Item = memo(({article, onPress}: Props) => {
             )}
           </View>
         </View>
-        <Text>{categories?.join(' - ')}</Text>
+        <Text style={styles.all.categories} variant="labelSmall">
+          {categories?.join(' - ')}
+        </Text>
+        <Divider style={styles.all.divider} />
       </View>
     </Pressable>
   );
@@ -54,8 +57,6 @@ function useStyles() {
   const styles = StyleSheet.create({
     item: {
       padding: ITEM_PADDING,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.outlineVariant,
       flex: 1,
       justifyContent: 'space-between',
       backgroundColor: 'red',
@@ -78,12 +79,19 @@ function useStyles() {
     },
     itemText: {
       fontWeight: 'regular',
+      color: theme.colors.onTertiaryContainer,
     },
     itemTitle: {
       fontWeight: 'bold',
     },
     date: {
       fontWeight: 'thin',
+      color: theme.colors.onPrimaryContainer,
+      marginBottom: 8,
+    },
+    categories: {
+      color: theme.colors.onPrimaryContainer,
+      marginTop: 8,
     },
     imageContainer: {
       width: '40%',
@@ -95,6 +103,9 @@ function useStyles() {
       maxWidth: '90%',
       height: 100,
       aspectRatio: 16 / 9,
+    },
+    divider: {
+      marginTop: 16,
     },
   });
 
