@@ -2,7 +2,7 @@ import React from 'react';
 import {MAIN_ROUTES, NEWS_ROUTES} from '../constants/routes';
 import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
 import {Articles} from '../Screens/Articles';
-import {Settings} from '../Screens/Settings';
+import {SettingsScreen} from '../Screens/Settings';
 import {useTheme} from 'react-native-paper';
 import {NewsList} from '../Screens/News/components/NewsList';
 
@@ -30,7 +30,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name={MAIN_ROUTES.settings}
-        component={Settings}
+        component={SettingsScreen}
         options={{tabBarIcon: 'cogs'}}
       />
     </Tab.Navigator>

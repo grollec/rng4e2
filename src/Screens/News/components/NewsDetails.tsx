@@ -17,7 +17,7 @@ import {Divider, Text} from 'react-native-paper';
 import RenderHTML, {MixedStyleDeclaration} from 'react-native-render-html';
 import {isNaN} from 'lodash';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {RoutesParamsList} from '../../../constants/routes';
+import {AppRoutesParamsList} from '../../../constants/routes';
 import {IconButton, useTheme} from 'react-native-paper';
 import {COLOR_MARINE} from '../../../constants/colors';
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes';
@@ -29,7 +29,7 @@ const INJECTED_JAVASCRIPT =
 const pixelRatio = PixelRatio.get();
 
 type NewsNativeStackScreenProps = NativeStackScreenProps<
-  RoutesParamsList,
+  AppRoutesParamsList,
   'news-details'
 >;
 export const NewsDetails = ({

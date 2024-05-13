@@ -1,11 +1,15 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {MAIN_ROUTES, NEWS_ROUTES, RoutesParamsList} from '../constants/routes';
+import {
+  MAIN_ROUTES,
+  NEWS_ROUTES,
+  AppRoutesParamsList,
+} from '../constants/routes';
 import {NewsDetails} from '../Screens/News/components/NewsDetails';
 import {COLOR_MARINE} from '../constants/colors';
 import {TabNavigator} from './TabNavigator';
 
-const Stack = createNativeStackNavigator<RoutesParamsList>();
+const Stack = createNativeStackNavigator<AppRoutesParamsList>();
 
 export const MainNavigator = () => {
   return (

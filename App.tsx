@@ -1,6 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {PaperProvider} from 'react-native-paper';
 
 import NetInfo from '@react-native-community/netinfo';
 import {
@@ -9,11 +7,10 @@ import {
   focusManager,
   onlineManager,
 } from '@tanstack/react-query';
-import {AppState, AppStateStatus, Platform, useColorScheme} from 'react-native';
-import {DARK_THEME, LIGHT_THEME} from './src/constants/colors';
+import {AppState, AppStateStatus, Platform} from 'react-native';
 import 'dayjs/locale/fr';
 import dayjs from 'dayjs';
-import {MainNavigator} from './src/navigators/MainNavigator';
+import Main from './src/components/Main';
 
 dayjs.locale('fr');
 
@@ -39,15 +36,9 @@ function App(): React.JSX.Element {
     return () => subscription.remove();
   }, []);
 
-  const isDarkTheme = useColorScheme() === 'dark';
-
   return (
     <QueryClientProvider client={queryClient}>
-      <PaperProvider theme={isDarkTheme ? DARK_THEME : LIGHT_THEME}>
-        <NavigationContainer>
-          <MainNavigator />
-        </NavigationContainer>
-      </PaperProvider>
+      <Main />
     </QueryClientProvider>
   );
 }

@@ -1,7 +1,7 @@
-import {NewsRoutesParamsList} from '../constants/routes';
+import {AppRoutesParamsList} from '../constants/routes';
 
 declare global {
   namespace ReactNavigation {
-    interface RootParamList extends RootParamList, NewsRoutesParamsList {}
+    interface RootParamList extends RootParamList, AppRoutesParamsList {}
   }
 }
