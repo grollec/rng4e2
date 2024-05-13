@@ -9,9 +9,11 @@ export const NEWS_ROUTES = {
   details: `${MAIN_ROUTES.news}-details` as const,
 };
 
-export type NewsRoutesParamsList = {
+export type RoutesParamsList = {
+  [MAIN_ROUTES.news]: undefined;
   [NEWS_ROUTES.list]: undefined;
   [NEWS_ROUTES.details]: {
     articleId: number;
   };
+  [MAIN_ROUTES.settings]: undefined;
 };

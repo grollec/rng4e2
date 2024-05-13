@@ -1,10 +1,10 @@
 import React from 'react';
-import {MAIN_ROUTES} from '../constants/routes';
+import {MAIN_ROUTES, NEWS_ROUTES} from '../constants/routes';
 import {createMaterialBottomTabNavigator} from 'react-native-paper/react-navigation';
-import {News} from '../Screens/News/News';
 import {Articles} from '../Screens/Articles';
 import {Settings} from '../Screens/Settings';
 import {useTheme} from 'react-native-paper';
+import {NewsList} from '../Screens/News/components/NewsList';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -17,8 +17,8 @@ export const TabNavigator = () => {
       inactiveColor={theme.colors.primary}
       activeIndicatorStyle={{backgroundColor: theme.colors.primaryContainer}}>
       <Tab.Screen
-        name={MAIN_ROUTES.news}
-        component={News}
+        name={NEWS_ROUTES.list}
+        component={NewsList}
         options={{
           tabBarIcon: 'newspaper-variant-multiple-outline',
         }}

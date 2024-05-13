@@ -11,9 +11,9 @@ import {
 } from '@tanstack/react-query';
 import {AppState, AppStateStatus, Platform, useColorScheme} from 'react-native';
 import {DARK_THEME, LIGHT_THEME} from './src/constants/colors';
-import {TabNavigator} from './src/navigators/TabNavigator';
 import 'dayjs/locale/fr';
 import dayjs from 'dayjs';
+import {MainNavigator} from './src/navigators/MainNavigator';
 
 dayjs.locale('fr');
 
@@ -45,7 +45,7 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <PaperProvider theme={isDarkTheme ? DARK_THEME : LIGHT_THEME}>
         <NavigationContainer>
-          <TabNavigator />
+          <MainNavigator />
         </NavigationContainer>
       </PaperProvider>
     </QueryClientProvider>
