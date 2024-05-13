@@ -21,3 +21,13 @@ export async function fetchNews({pageParam}: {pageParam: number}) {
   const rawNews = await res.json();
   return parseNewsResponse(rawNews);
 }
+
+export const FEATURE_ARTICLES_QUERY_KEY = 'feature-articles';
+export async function fetchFeatureArticles({pageParam}: {pageParam: number}) {
+  const url = `https://www.girondins4ever.com/wp-json/wp/v2/posts?per_page=${PER_PAGE}&offset=${
+    pageParam * PER_PAGE
+  }&_fields=${ARTICLE_FIELDS}&_embed`;
+  const res = await fetch(url, {});
+  const rawArticles = await res.json();
+  return parseNewsResponse(rawArticles);
+}

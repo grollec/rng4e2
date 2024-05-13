@@ -17,7 +17,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppRoutesParamsList} from '../../../constants/routes';
 import {useTheme} from 'react-native-paper';
 import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes';
-import {useArticle} from '../../../hooks/useArticle';
+import {useFeaturedArticle} from '../../../hooks/useArticle';
 import {
   ArticleBottomBar,
   BOTTOM_BAR_HEIGHT,
@@ -31,12 +31,12 @@ const pixelRatio = PixelRatio.get();
 
 type NewsNativeStackScreenProps = NativeStackScreenProps<
   AppRoutesParamsList,
-  'news-details'
+  'featured-articles-details'
 >;
-export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
+export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
   const webViewRef = useRef<WebView>(null);
   const articleId = route.params.articleId;
-  const article = useArticle(articleId);
+  const article = useFeaturedArticle(articleId);
 
   const {width} = useWindowDimensions();
   const [contentHeight, setContentHeight] = useState(0);
@@ -116,7 +116,7 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
           </View>
         </View>
       </ScrollView>
-      <ArticleBottomBar />
+      <ArticleBottomBar article={article} />
     </SafeAreaView>
   );
 };

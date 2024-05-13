@@ -8,13 +8,17 @@ import {
 } from 'react-native';
 import {Button} from 'react-native-paper';
 import {Article} from '../../../types/Article';
-import {COLOR_WHITE} from '../../../constants/colors';
+import {COLOR_BORDEAUX, COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
-import {NEWS_ROUTES} from '../../../constants/routes';
-import {NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
+import {FEATURE_ARTICLES_ROUTES} from '../../../constants/routes';
+import {
+  FEATURE_ARTICLES_QUERY_KEY,
+  fetchFeatureArticles,
+} from '../../../services/api';
 import {MainItem} from './MainItem';
 import {FetchError} from '../../FetchError';
+import {FocusAwareStatusBar} from '../../../components/FocusAwareStatusBar';
 
 const PER_PAGE = 20;
 const INITIAL_PAGE = 0;
@@ -27,7 +31,7 @@ function getItemCount(data?: Article[]) {
   return (data?.length || 0) + 1;
 }
 
-export const NewsList = () => {
+export const FeatureArticlesList = () => {
   const {
     data,
     refetch,
@@ -39,8 +43,8 @@ export const NewsList = () => {
     isLoading,
     isFetching,
   } = useInfiniteQuery({
-    queryKey: [NEWS_QUERY_KEY],
-    queryFn: fetchNews,
+    queryKey: [FEATURE_ARTICLES_QUERY_KEY],
+    queryFn: fetchFeatureArticles,
     initialPageParam: INITIAL_PAGE,
     getNextPageParam: (lastPage, _, lastPageParam) => {
       if (lastPage.length === 0) {
@@ -57,7 +61,6 @@ export const NewsList = () => {
       !(isRefetching || isLoading || isFetchingNextPage || isFetching),
     [isError, isFetching, isFetchingNextPage, isLoading, isRefetching],
   );
-
   const news = useMemo(() => {
     return data?.pages.flat() || [];
   }, [data?.pages]);
@@ -65,7 +68,7 @@ export const NewsList = () => {
   const navigation = useNavigation();
   const onItemPress = useCallback(
     (id: number) => {
-      navigation.navigate(NEWS_ROUTES.details, {
+      navigation.navigate(FEATURE_ARTICLES_ROUTES.details, {
         articleId: id,
       });
     },
@@ -100,6 +103,7 @@ export const NewsList = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <FocusAwareStatusBar backgroundColor={COLOR_BORDEAUX} />
       {shouldShowError ? <FetchError onRefetch={refetch} /> : null}
       <VirtualizedList<Article>
         initialNumToRender={PER_PAGE}
