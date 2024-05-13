@@ -70,6 +70,7 @@ export const NewsDetails = ({
     [],
   );
 
+  const theme = useTheme();
   const styles = useStyles({contentHeight});
   const titleStyles = useTitleStyles();
   const css = useCSS();
@@ -121,7 +122,7 @@ export const NewsDetails = ({
       <View style={styles.bottomBar}>
         <IconButton
           icon="close"
-          iconColor={COLOR_MARINE}
+          iconColor={theme.colors.onPrimaryContainer}
           onPress={() => navigation.goBack()}
         />
       </View>
@@ -135,6 +136,7 @@ function useCSS() {
   <style>
     html {
       font-size: ${18 * pixelRatio}px;
+      background-color: ${theme.colors.background}
     }
     p {
       color: ${theme.colors.onPrimaryContainer};

@@ -21,17 +21,18 @@ export const TabNavigator = () => {
         component={NewsList}
         options={{
           tabBarIcon: 'newspaper-variant-multiple-outline',
+          title: 'Brève',
         }}
       />
       <Tab.Screen
         name={MAIN_ROUTES.articles}
         component={Articles}
-        options={{tabBarIcon: 'newspaper-variant-outline'}}
+        options={{tabBarIcon: 'newspaper-variant-outline', title: 'Articles'}}
       />
       <Tab.Screen
         name={MAIN_ROUTES.settings}
         component={SettingsScreen}
-        options={{tabBarIcon: 'cogs'}}
+        options={{tabBarIcon: 'cogs', title: 'Paramètres'}}
       />
     </Tab.Navigator>
   );

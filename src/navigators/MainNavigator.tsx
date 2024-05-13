@@ -19,6 +19,7 @@ export const MainNavigator = () => {
         component={TabNavigator}
         options={{
           statusBarColor: COLOR_MARINE,
+          headerShown: false,
         }}
       />
       <Stack.Screen
