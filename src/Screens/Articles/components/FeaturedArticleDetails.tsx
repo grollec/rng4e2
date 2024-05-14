@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {Linking, PixelRatio} from 'react-native';
+import {PixelRatio, Platform} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {useHeaderHeight} from '@react-navigation/elements';
 import {
@@ -16,12 +16,12 @@ import {isNaN} from 'lodash';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {AppRoutesParamsList} from '../../../constants/routes';
 import {useTheme} from 'react-native-paper';
-import {ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes';
 import {useFeaturedArticle} from '../../../hooks/useArticle';
 import {
   ArticleBottomBar,
   BOTTOM_BAR_HEIGHT,
 } from '../../../components/ArticleBottomBar';
+import {useHandleShouldStartLoadWithRequest} from '../../../hooks/useHandleShouldStartLoadWithRequest';
 
 const fallbackImg = require('../../../assets/images/fallback_pic.jpg');
 
@@ -49,16 +49,8 @@ export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
     }
   }, []);
 
-  const handleShouldStartLoadWithRequest = useCallback(
-    (event: ShouldStartLoadRequest) => {
-      if (!/^[data:text, about:blank]/.test(event.url)) {
-        Linking.openURL(event.url);
-        return false;
-      }
-      return true;
-    },
-    [],
-  );
+  const handleShouldStartLoadWithRequest =
+    useHandleShouldStartLoadWithRequest();
 
   const styles = useStyles({contentHeight});
   const titleStyles = useTitleStyles();
@@ -121,6 +113,7 @@ export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
   );
 };
 
+const isIOS = Platform.OS === 'ios';
 function useCSS() {
   const theme = useTheme();
   return `
@@ -131,7 +124,11 @@ function useCSS() {
     }
     p {
       color: ${theme.colors.onPrimaryContainer};
-      font-family: ${theme.fonts.bodyLarge.fontFamily};
+      font-family: ${
+        isIOS
+          ? '"Optimistic Display",system-ui,-apple-system,sans-serif'
+          : theme.fonts.bodyLarge.fontFamily
+      };
       font-size: ${theme.fonts.bodyLarge.fontSize * pixelRatio}px;
       font-weight: ${theme.fonts.bodyLarge.fontWeight};
       line-height: ${theme.fonts.bodyLarge.lineHeight * pixelRatio}px;
