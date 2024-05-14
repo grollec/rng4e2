@@ -81,8 +81,8 @@ android {
         applicationId "com.girondins4ever.g4etest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 40
-        versionName "5.3"
+        versionCode 41
+        versionName "5.4"
     }
     signingConfigs {
         debug {
