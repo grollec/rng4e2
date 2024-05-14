@@ -9,7 +9,7 @@ import {
 import {List, SegmentedButtons, Text, useTheme} from 'react-native-paper';
 import {Settings} from '../types/Settings';
 import {useSettingsMutation, useSettingsQuery} from '../hooks/useSettings';
-import crashlytics from '@react-native-firebase/crashlytics';
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 const TOSURL = 'https://www.girondins4ever.com/mentions-legales/';
 
@@ -54,7 +54,7 @@ export const SettingsScreen = () => {
 };
 
 const TOSIcon = () => <List.Icon icon="arrow-top-right-bold-box-outline" />;
-const BombIcon = () => <List.Icon icon="bomb" />;
+// const BombIcon = () => <List.Icon icon="bomb" />;
 
 const ThemeSwitch = () => {
   const {data} = useSettingsQuery();
