@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {Linking, PixelRatio} from 'react-native';
+import {Linking, PixelRatio, Platform} from 'react-native';
 import {WebView} from 'react-native-webview';
 import {useHeaderHeight} from '@react-navigation/elements';
 import {
@@ -121,8 +121,10 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
   );
 };
 
+const isIOS = Platform.OS === 'ios';
 function useCSS() {
   const theme = useTheme();
+
   return `
   <style>
     html {
@@ -131,7 +133,9 @@ function useCSS() {
     }
     p {
       color: ${theme.colors.onPrimaryContainer};
-      font-family: ${theme.fonts.bodyLarge.fontFamily};
+      font-family: ${
+        isIOS ? 'San Francisco' : theme.fonts.bodyLarge.fontFamily
+      };
       font-size: ${theme.fonts.bodyLarge.fontSize * pixelRatio}px;
       font-weight: ${theme.fonts.bodyLarge.fontWeight};
       line-height: ${theme.fonts.bodyLarge.lineHeight * pixelRatio}px;

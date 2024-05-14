@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "313676979213",
+    "project_id": "rng4e2",
+    "storage_bucket": "rng4e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313676979213:android:0e162d42d9804318b10944",
+        "android_client_info": {
+          "package_name": "com.girondins4ever.g4etest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa7splZJTUjQV0UAhp8z3Xrk0pv6SsZyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
