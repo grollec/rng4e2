@@ -1,5 +1,4 @@
-import React, {useCallback, useMemo, useRef, useState} from 'react';
-import {PixelRatio, Platform} from 'react-native';
+import React, {useCallback, useMemo, useState} from 'react';
 import {WebView} from 'react-native-webview';
 import {useHeaderHeight} from '@react-navigation/elements';
 import {
@@ -22,19 +21,19 @@ import {
   BOTTOM_BAR_HEIGHT,
 } from '../../../components/ArticleBottomBar';
 import {useHandleShouldStartLoadWithRequest} from '../../../hooks/useHandleShouldStartLoadWithRequest';
+import {useArticleWebViewCSS} from '../../../hooks/useArticleWebViewCSS';
+import {ListLoader} from '../../../components/ListLoader';
 
 const fallbackImg = require('../../../assets/images/fallback_pic.jpg');
 
 const INJECTED_JAVASCRIPT =
   'window.ReactNativeWebView.postMessage(Math.max(document.documentElement.clientHeight, document.documentElement.scrollHeight, document.body.clientHeight, document.body.scrollHeight))';
-const pixelRatio = PixelRatio.get();
 
 type NewsNativeStackScreenProps = NativeStackScreenProps<
   AppRoutesParamsList,
   'featured-articles-details'
 >;
 export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
-  const webViewRef = useRef<WebView>(null);
   const articleId = route.params.articleId;
   const article = useFeaturedArticle(articleId);
 
@@ -44,17 +43,19 @@ export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
     if (!isNaN(height)) {
       // Scales to proper height using PixelRatio and gives it some
       // extra to ensure content will fit.
-      const nextHeight = height / pixelRatio + 100;
+      const nextHeight = height;
       setContentHeight(nextHeight);
     }
   }, []);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleShouldStartLoadWithRequest =
     useHandleShouldStartLoadWithRequest();
 
   const styles = useStyles({contentHeight});
   const titleStyles = useTitleStyles();
-  const css = useCSS();
+  const css = useArticleWebViewCSS();
   const imgSource = useMemo(
     () => (article?.img ? {uri: article.img} : fallbackImg),
     [article?.img],
@@ -92,9 +93,11 @@ export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
           </Text>
           <Text variant="labelSmall">{article.categories?.join(' ')}</Text>
           <Divider style={styles.divider} />
+          {isLoading ? <ListLoader /> : null}
           <View style={styles.webViewContainer}>
             <WebView
-              ref={webViewRef}
+              onLoadStart={() => setIsLoading(true)}
+              onLoadEnd={() => setIsLoading(false)}
               source={{html: `${css}${article.content}`}}
               originWhitelist={['*']}
               style={styles.webView}
@@ -112,45 +115,6 @@ export const FeaturedArticleDetails = ({route}: NewsNativeStackScreenProps) => {
     </SafeAreaView>
   );
 };
-
-const isIOS = Platform.OS === 'ios';
-function useCSS() {
-  const theme = useTheme();
-  return `
-  <style>
-    html {
-      font-size: ${18 * pixelRatio}px;
-      background-color: ${theme.colors.background}
-    }
-    p {
-      color: ${theme.colors.onPrimaryContainer};
-      font-family: ${
-        isIOS
-          ? '"Optimistic Display",system-ui,-apple-system,sans-serif'
-          : theme.fonts.bodyLarge.fontFamily
-      };
-      font-size: ${theme.fonts.bodyLarge.fontSize * pixelRatio}px;
-      font-weight: ${theme.fonts.bodyLarge.fontWeight};
-      line-height: ${theme.fonts.bodyLarge.lineHeight * pixelRatio}px;
-      letter-spacing: ${theme.fonts.bodyLarge.letterSpacing};
-    }
-    .aligncenter,
-    .twitter-tweet,
-    iframe {
-      display:block;
-      margin:0 auto 20px;
-      clear:both
-    }
-    figure,
-    img {
-      min-width: 100%;
-      max-width: 100%;
-      height: auto;
-    }
-    </style>
-  \n
-`;
-}
 
 function useTitleStyles(): MixedStyleDeclaration {
   const theme = useTheme();
