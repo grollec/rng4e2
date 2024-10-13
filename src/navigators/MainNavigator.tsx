@@ -1,15 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {
-  MAIN_ROUTES,
-  NEWS_ROUTES,
-  AppRoutesParamsList,
-  FEATURE_ARTICLES_ROUTES,
-} from '../constants/routes';
-import {NewsDetails} from '../Screens/News/components/NewsDetails';
-import {COLOR_BORDEAUX, COLOR_MARINE} from '../constants/colors';
+import {MAIN_ROUTES, AppRoutesParamsList} from '../constants/routes';
+import {COLOR_MARINE} from '../constants/colors';
 import {TabNavigator} from './TabNavigator';
-import {FeaturedArticleDetails} from '../Screens/Articles/components/FeaturedArticleDetails';
+import {ArticleDetails} from '../components/ArticleDetails';
 
 const Stack = createNativeStackNavigator<AppRoutesParamsList>();
 
@@ -25,20 +19,11 @@ export const MainNavigator = () => {
         }}
       />
       <Stack.Screen
-        name={NEWS_ROUTES.details}
-        component={NewsDetails}
+        name={MAIN_ROUTES.details}
+        component={ArticleDetails}
         options={{
           headerShown: false,
           statusBarColor: COLOR_MARINE,
-          animation: 'slide_from_bottom',
-        }}
-      />
-      <Stack.Screen
-        name={FEATURE_ARTICLES_ROUTES.details}
-        component={FeaturedArticleDetails}
-        options={{
-          headerShown: false,
-          statusBarColor: COLOR_BORDEAUX,
           animation: 'slide_from_bottom',
         }}
       />

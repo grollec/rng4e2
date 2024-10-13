@@ -9,34 +9,38 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import {Divider, Text} from 'react-native-paper';
+import {Button, Divider, Text} from 'react-native-paper';
 import RenderHTML, {MixedStyleDeclaration} from 'react-native-render-html';
 import {isNaN} from 'lodash';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AppRoutesParamsList} from '../../../constants/routes';
 import {useTheme} from 'react-native-paper';
-import {useArticle} from '../../../hooks/useArticle';
-import {
-  ArticleBottomBar,
-  BOTTOM_BAR_HEIGHT,
-} from '../../../components/ArticleBottomBar';
-import {useHandleShouldStartLoadWithRequest} from '../../../hooks/useHandleShouldStartLoadWithRequest';
-import {useArticleWebViewCSS} from '../../../hooks/useArticleWebViewCSS';
-import {ListLoader} from '../../../components/ListLoader';
+import {AppRoutesParamsList, MAIN_ROUTES} from '../constants/routes';
+import {useArticle} from '../hooks/useArticle';
+import {useNavigation} from '@react-navigation/native';
+import {useHandleShouldStartLoadWithRequest} from '../hooks/useHandleShouldStartLoadWithRequest';
+import {useArticleWebViewCSS} from '../hooks/useArticleWebViewCSS';
+import {ListLoader} from './ListLoader';
+import {ArticleBottomBar, BOTTOM_BAR_HEIGHT} from './ArticleBottomBar';
 
-const fallbackImg = require('../../../assets/images/fallback_pic.jpg');
+const fallbackImg = require('../assets/images/fallback_pic.jpg');
 
 const INJECTED_JAVASCRIPT =
   'window.ReactNativeWebView.postMessage(Math.max(document.documentElement.clientHeight, document.documentElement.scrollHeight, document.body.clientHeight, document.body.scrollHeight))';
 
 type NewsNativeStackScreenProps = NativeStackScreenProps<
   AppRoutesParamsList,
-  'news-details'
+  'details'
 >;
-export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
+export const ArticleDetails = ({route}: NewsNativeStackScreenProps) => {
   const articleId = route.params.articleId;
-  const article = useArticle(articleId);
+  const articleType = route.params.articleType;
+  const {
+    data: article,
+    isLoading,
+    isError,
+  } = useArticle(articleType, articleId);
 
+  const navigation = useNavigation();
   const {width} = useWindowDimensions();
   const [contentHeight, setContentHeight] = useState(0);
   const handleJSMessage = useCallback((height: number) => {
@@ -48,10 +52,10 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
     }
   }, []);
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingWebviewContent, setIsLoadingWebViewContent] = useState(false);
 
   const handleShouldStartLoadWithRequest =
-    useHandleShouldStartLoadWithRequest();
+    useHandleShouldStartLoadWithRequest(articleType);
 
   const styles = useStyles({contentHeight});
   const titleStyles = useTitleStyles();
@@ -60,10 +64,36 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
     () => (article?.img ? {uri: article.img} : fallbackImg),
     [article?.img],
   );
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.notFoundContainer}>
+        <ListLoader />
+        <ArticleBottomBar />
+      </SafeAreaView>
+    );
+  }
+
+  if (isError && !article) {
+    return (
+      <SafeAreaView style={styles.notFoundContainer}>
+        <Text variant="bodyLarge">
+          Une erreur est survenue pendant le chargement de l’article
+        </Text>
+        <Button
+          mode="contained"
+          onPress={() => navigation.navigate(MAIN_ROUTES.home)}>
+          Revenir à l’accueil
+        </Button>
+        <ArticleBottomBar />
+      </SafeAreaView>
+    );
+  }
+
   if (!article) {
     return (
       <SafeAreaView style={styles.notFoundContainer}>
-        <Text>Article not found</Text>
+        <Text variant="bodyLarge">L’article n’a pas pu être chargé.</Text>
         <ArticleBottomBar />
       </SafeAreaView>
     );
@@ -93,12 +123,14 @@ export const NewsDetails = ({route}: NewsNativeStackScreenProps) => {
           </Text>
           <Text variant="labelSmall">{article.categories?.join(' ')}</Text>
           <Divider style={styles.divider} />
-          {isLoading ? <ListLoader /> : null}
+          {isLoadingWebviewContent ? <ListLoader /> : null}
           <View style={styles.webViewContainer}>
             <WebView
-              onLoadStart={() => setIsLoading(true)}
-              onLoadEnd={() => setIsLoading(false)}
-              source={{html: `${css}${article.content}`}}
+              onLoadStart={() => setIsLoadingWebViewContent(true)}
+              onLoadEnd={() => setIsLoadingWebViewContent(false)}
+              source={{
+                html: `${css}<a href="https://girondins4ever.com/?p=523621">GO GO</a>${article.content}`,
+              }}
               originWhitelist={['*']}
               style={styles.webView}
               onMessage={m => {
@@ -172,6 +204,8 @@ function useStyles({contentHeight}: {contentHeight: number}) {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      gap: 8,
     },
   });
 }

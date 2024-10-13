@@ -11,8 +11,8 @@ import {Article} from '../../../types/Article';
 import {COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
-import {NEWS_ROUTES} from '../../../constants/routes';
-import {NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
+import {MAIN_ROUTES} from '../../../constants/routes';
+import {ArticleType, NEWS_QUERY_KEY, fetchNews} from '../../../services/api';
 import {MainItem} from './MainItem';
 import {FetchError} from '../../FetchError';
 import {ListLoader} from '../../../components/ListLoader';
@@ -37,6 +37,7 @@ export const NewsList = () => {
     isFetchingNextPage,
     isPlaceholderData,
     isError,
+    error,
     isLoading,
     isFetching,
   } = useInfiniteQuery({
@@ -66,7 +67,8 @@ export const NewsList = () => {
   const navigation = useNavigation();
   const onItemPress = useCallback(
     (id: number) => {
-      navigation.navigate(NEWS_ROUTES.details, {
+      navigation.navigate(MAIN_ROUTES.details, {
+        articleType: ArticleType.NEWS,
         articleId: id,
       });
     },

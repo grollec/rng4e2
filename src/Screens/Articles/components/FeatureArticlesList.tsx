@@ -11,8 +11,9 @@ import {Article} from '../../../types/Article';
 import {COLOR_BORDEAUX, COLOR_WHITE} from '../../../constants/colors';
 import {Item} from '../components/Item';
 import {useNavigation} from '@react-navigation/native';
-import {FEATURE_ARTICLES_ROUTES} from '../../../constants/routes';
+import {MAIN_ROUTES} from '../../../constants/routes';
 import {
+  ArticleType,
   FEATURE_ARTICLES_QUERY_KEY,
   fetchFeatureArticles,
 } from '../../../services/api';
@@ -69,8 +70,9 @@ export const FeatureArticlesList = () => {
   const navigation = useNavigation();
   const onItemPress = useCallback(
     (id: number) => {
-      navigation.navigate(FEATURE_ARTICLES_ROUTES.details, {
+      navigation.navigate(MAIN_ROUTES.details, {
         articleId: id,
+        articleType: ArticleType.FEATURE_ARTICLE,
       });
     },
     [navigation],
